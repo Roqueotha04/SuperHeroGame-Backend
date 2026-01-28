@@ -5,13 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class User {
+
+    public User(String nombre, String apellido, String email, String password) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.password = password;
+        this.confirmed=true;
+    }
+
+    public User() {
+        this.confirmed=true;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +34,13 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    private List<Long> favoritos;
 
-    private List<Equipo> equipos;
+    private boolean confirmed;
 
-    private List<Pelea> historial;
+    @ElementCollection
+    private List<Long> favoritos=new ArrayList<>();
+    @OneToMany
+    private List<Equipo> equipos=new ArrayList<>();
+    @OneToMany
+    private List<Pelea> historial=new ArrayList<>();
 }
