@@ -1,18 +1,16 @@
 package com.superherogame.superhero_backend.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-public class User {
+public class AppUser {
 
-    public User(String nombre, String apellido, String email, String password) {
+    public AppUser(String nombre, String apellido, String email, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
@@ -20,7 +18,7 @@ public class User {
         this.confirmed=true;
     }
 
-    public User() {
+    public AppUser() {
         this.confirmed=true;
     }
 

@@ -2,7 +2,7 @@ package com.superherogame.superhero_backend.services;
 
 import com.superherogame.superhero_backend.dto.auth.UserLoginDTO;
 import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
-import com.superherogame.superhero_backend.entities.User;
+import com.superherogame.superhero_backend.entities.AppUser;
 import com.superherogame.superhero_backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +16,21 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public User register(UserRegisterDTO userRegisterDTO) {
-        User user = new User();
+    public AppUser register(UserRegisterDTO userRegisterDTO) {
+        AppUser appUser = new AppUser();
 
-        user.setEmail(userRegisterDTO.email());
-        user.setNombre(userRegisterDTO.nombre());
-        user.setApellido(userRegisterDTO.apellido());
-        user.setPassword(userRegisterDTO.password());
+        appUser.setEmail(userRegisterDTO.email());
+        appUser.setNombre(userRegisterDTO.nombre());
+        appUser.setApellido(userRegisterDTO.apellido());
+        appUser.setPassword(userRegisterDTO.password());
 
-        return userRepository.save(user);
+        return userRepository.save(appUser);
     }
 
     @Override
     public String login(UserLoginDTO userLoginDTO) {
-        User user = userRepository.findByEmail(userLoginDTO.email()).orElseThrow(() -> new RuntimeException("User not found"));
-        if (!user.getPassword().equals(userLoginDTO.password())) throw new RuntimeException("Incorrect password");
-        return user.getEmail();
+        AppUser appUser = userRepository.findByEmail(userLoginDTO.email()).orElseThrow(() -> new RuntimeException("User not found"));
+        if (!appUser.getPassword().equals(userLoginDTO.password())) throw new RuntimeException("Incorrect password");
+        return appUser.getEmail();
     }
 }
