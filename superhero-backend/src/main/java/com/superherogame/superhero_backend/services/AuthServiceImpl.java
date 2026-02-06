@@ -1,7 +1,7 @@
 package com.superherogame.superhero_backend.services;
 
-import com.superherogame.superhero_backend.dto.UserLoginDTO;
-import com.superherogame.superhero_backend.dto.UserRegisterDTO;
+import com.superherogame.superhero_backend.dto.auth.UserLoginDTO;
+import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
 import com.superherogame.superhero_backend.entities.User;
 import com.superherogame.superhero_backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;

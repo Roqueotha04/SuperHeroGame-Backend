@@ -1,8 +1,7 @@
 package com.superherogame.superhero_backend.controllers;
 
-import com.superherogame.superhero_backend.dto.UserLoginDTO;
-import com.superherogame.superhero_backend.dto.UserRegisterDTO;
-import com.superherogame.superhero_backend.repositories.UserRepository;
+import com.superherogame.superhero_backend.dto.auth.UserLoginDTO;
+import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
 import com.superherogame.superhero_backend.services.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
