@@ -1,7 +1,7 @@
 package com.superherogame.superhero_backend.services;
 
 import com.superherogame.superhero_backend.Utils.JwtUtils;
-import com.superherogame.superhero_backend.dto.UserResponse;
+import com.superherogame.superhero_backend.dto.UserAuthResponse;
 import com.superherogame.superhero_backend.dto.auth.UserLoginDTO;
 import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
 import com.superherogame.superhero_backend.entities.AppUser;
@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public UserResponse register(UserRegisterDTO userRegisterDTO) {
+    public UserAuthResponse register(UserRegisterDTO userRegisterDTO) {
         AppUser appUser = new AppUser();
 
         appUser.setEmail(userRegisterDTO.email());
@@ -51,6 +51,6 @@ public class AuthServiceImpl implements AuthService{
                         userLoginDTO.password()
                 )
         );
-        return null;
+        AppUser appUser = userRepository.findByEmail(userLoginDTO)
     }
 }
