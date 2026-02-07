@@ -1,5 +1,6 @@
 package com.superherogame.superhero_backend.controllers;
 
+import com.superherogame.superhero_backend.dto.UserResponse;
 import com.superherogame.superhero_backend.dto.auth.UserLoginDTO;
 import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
 import com.superherogame.superhero_backend.services.AuthService;
@@ -21,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody UserRegisterDTO userRegisterDto){
+    public ResponseEntity<UserResponse> signUp(@RequestBody UserRegisterDTO userRegisterDto){
         return ResponseEntity.ok(authService.register(userRegisterDto));
     }
 
