@@ -6,5 +6,5 @@ import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
 
 public interface AuthService {
     public UserAuthResponse register(UserRegisterDTO userRegisterDTO);
-    public String login (UserLoginDTO userLoginDTO);
+    public UserAuthResponse login (UserLoginDTO userLoginDTO);
 }

@@ -27,8 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody UserLoginDTO userLoginDTO){
-        String token = authService.login(userLoginDTO);
-        return ResponseEntity.ok(Map.of("token", token));
+    public ResponseEntity<UserAuthResponse> signIn(@RequestBody UserLoginDTO userLoginDTO){
+        return ResponseEntity.ok(authService.login(userLoginDTO));
     }
 }
