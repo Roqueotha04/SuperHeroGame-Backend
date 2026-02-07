@@ -1,6 +1,8 @@
 package com.superherogame.superhero_backend.configuration;
 
 import com.superherogame.superhero_backend.dto.UserResponse;
+import com.superherogame.superhero_backend.entities.AppUser;
+import com.superherogame.superhero_backend.exceptions.ResourceNotFound;
 import com.superherogame.superhero_backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,16 +26,21 @@ public class AppConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager (AuthenticationConfiguration config){
+    public AuthenticationManager authenticationManager (AuthenticationConfiguration config)throws Exception{
         return config.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider (){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+    public UserDetailsService userDetailsService(){
+        return username -> {
+            final AppUser user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new ResourceNotFound("Could not found user with email: " + username));
+            return org.springframework.security.core.userdetails.User.builder()
+                    .username(user.getEmail())
+                    .password(user.getPassword())
+                    .authorities("USER")
+                    .build();
+        };
     }
 
     @Bean
@@ -41,11 +48,5 @@ public class AppConfig {
         return new BCryptPasswordEncoder();
     }
 
-   /* @Bean
-    public UserDetailsService userDetailsService(){
-        return username -> {
-            final User user = userRepository.findByEmail(username)
-                    .orElseThrow() -> new
-        }
-    }*/
+
 }
