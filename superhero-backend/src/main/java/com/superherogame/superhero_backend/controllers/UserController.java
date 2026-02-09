@@ -1,6 +1,7 @@
 package com.superherogame.superhero_backend.controllers;
 
 import com.superherogame.superhero_backend.configuration.service.CurrentUserService;
+import com.superherogame.superhero_backend.dto.UserResponse;
 import com.superherogame.superhero_backend.entities.AppUser;
 import com.superherogame.superhero_backend.repositories.UserRepository;
 import com.superherogame.superhero_backend.services.UserService;
@@ -12,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "http//localhost:4200")
 public class UserController {
 
     private final UserService userService;
@@ -28,4 +28,16 @@ public class UserController {
     public AppUser getActualUser(){
        return userService.findUserById(currentUserService.getId());
     }
+
+    @GetMapping("/favoritos")
+    public UserResponse getFavoritesList(){
+        return userService.getFavoritesList(currentUserService.getId());
+    }
+
+    @PutMapping("/agregarFavorito/{idHeroe}")
+    public UserResponse addHeroetoFavoritesList(@PathVariable Long idHeroe){
+        return userService.addHeroeToFavoritesList(currentUserService.getId(), idHeroe);
+    }
+
+
 }
