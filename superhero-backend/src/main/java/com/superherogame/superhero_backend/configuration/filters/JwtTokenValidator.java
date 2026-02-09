@@ -35,20 +35,28 @@ public class JwtTokenValidator extends OncePerRequestFilter {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (header == null || !header.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
+            return;
         }
 
         String token = header.substring(7);
-        try{
-            DecodedJWT decodedJWT = jwtUtils.verifyToken(token);
+        if(!token.isEmpty()){
+            try{
+                DecodedJWT decodedJWT = jwtUtils.verifyToken(token);
 
-            Long id=Long.valueOf(decodedJWT.getSubject());
-            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+                Long id=Long.valueOf(decodedJWT.getSubject());
+                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(id, null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }catch (JWTVerificationException e){
-            SecurityContextHolder.clearContext();
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+                Authentication authentication = new UsernamePasswordAuthenticationToken(id, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                filterChain.doFilter(request, response);
+            }catch (JWTVerificationException e){
+                SecurityContextHolder.clearContext();
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+            }
+        }else{
+            filterChain.doFilter(request, response);
+            return;
         }
+
     }
 }
