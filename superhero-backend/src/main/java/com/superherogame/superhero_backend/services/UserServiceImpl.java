@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser findUserById(Long id) {
-        return getUserOrThrow(id);
+    public UserResponse findUserById(Long id) {
+        return userMapper.toResponse(getUserOrThrow(id));
     }
 
 
@@ -39,17 +39,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse addHeroeToFavoritesList(Long userId, Long HeroeId) {
+    public UserResponse addHeroToFavoritesList(Long userId, Long HeroId) {
         AppUser appUser = getUserOrThrow(userId);
-        if (appUser.getFavoritos().contains(HeroeId)) throw new IllegalStateException("Duplicated heroe");
+        if (appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("Duplicated hero");
 
-        appUser.getFavoritos().add(HeroeId);
+        appUser.getFavoritos().add(HeroId);
         return userMapper.toResponse(userRepository.save(appUser));
     }
 
     @Override
-    public UserResponse RemoveHeroeFromFavoriteList(Long userId, Long HeroeId) {
-        return null;
+    public UserResponse RemoveHeroFromFavoriteList(Long userId, Long HeroId) {
+        AppUser appUser = getUserOrThrow(userId);
+        if (!appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("The hero is not in Favorites List");
+        appUser.getFavoritos().remove(HeroId);
+        return userMapper.toResponse(userRepository.save(appUser));
     }
 
     @Override

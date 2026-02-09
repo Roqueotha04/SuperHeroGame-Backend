@@ -25,18 +25,18 @@ public class UserController {
     }
 
     @GetMapping("/getActualUser")
-    public AppUser getActualUser(){
+    public UserResponse getActualUser(){
        return userService.findUserById(currentUserService.getId());
     }
 
-    @GetMapping("/favoritos")
-    public UserResponse getFavoritesList(){
-        return userService.getFavoritesList(currentUserService.getId());
+    @PatchMapping("/agregarFavorito/{idHeroe}")
+    public UserResponse addHerotoFavoritesList(@PathVariable Long idHeroe){
+        return userService.addHeroToFavoritesList(currentUserService.getId(), idHeroe);
     }
 
-    @PutMapping("/agregarFavorito/{idHeroe}")
-    public UserResponse addHeroetoFavoritesList(@PathVariable Long idHeroe){
-        return userService.addHeroeToFavoritesList(currentUserService.getId(), idHeroe);
+    @PatchMapping("/eliminarFavorito/{idHeroe}")
+    public UserResponse removeHeroFromFavoritesList(@PathVariable Long idHeroe){
+        return userService.RemoveHeroFromFavoriteList(currentUserService.getId(), idHeroe);
     }
 
 
