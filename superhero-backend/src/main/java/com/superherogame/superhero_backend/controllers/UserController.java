@@ -1,5 +1,6 @@
 package com.superherogame.superhero_backend.controllers;
 
+import com.superherogame.superhero_backend.configuration.service.CurrentUserService;
 import com.superherogame.superhero_backend.entities.AppUser;
 import com.superherogame.superhero_backend.repositories.UserRepository;
 import com.superherogame.superhero_backend.services.UserService;
@@ -16,20 +17,15 @@ public class UserController {
 
     private final UserService userService;
 
-    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, CurrentUserService currentUserService) {
         this.userService = userService;
-        this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
 
     @GetMapping("/getActualUser")
-    public AppUser getActualUser(Authentication authentication){
-       return userService.findUserById((Long) authentication.getPrincipal());
-    }
-
-    @GetMapping
-    public String helloWorld(){
-        return "Hello world";
+    public AppUser getActualUser(){
+       return userService.findUserById(currentUserService.getId());
     }
 }
