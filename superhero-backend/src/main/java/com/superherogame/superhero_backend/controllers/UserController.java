@@ -1,6 +1,7 @@
 package com.superherogame.superhero_backend.controllers;
 
 import com.superherogame.superhero_backend.configuration.service.CurrentUserService;
+import com.superherogame.superhero_backend.dto.EmailUpdateRequest;
 import com.superherogame.superhero_backend.dto.PasswordUpdateRequest;
 import com.superherogame.superhero_backend.dto.UserResponse;
 import com.superherogame.superhero_backend.entities.AppUser;
@@ -41,8 +42,8 @@ public class UserController {
     }
 
     @PatchMapping("/updateEmail")
-    public UserResponse patchEmail(@RequestBody String email){
-        return userService.patchEmail(currentUserService.getId(), email);
+    public UserResponse patchEmail(@RequestBody EmailUpdateRequest email){
+        return userService.patchEmail(currentUserService.getId(), email.email());
     }
 
     @PatchMapping("updatePassword")

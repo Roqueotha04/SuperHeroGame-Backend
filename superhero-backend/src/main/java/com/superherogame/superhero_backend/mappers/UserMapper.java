@@ -22,7 +22,7 @@ public class UserMapper {
         List<PeleaResponse> peleaResponseList = appUser.getHistorial().stream()
                 .map(peleaMapper::toResponse)
                 .toList();
-        return new UserResponse(appUser.getId(), appUser.getNombre(), appUser.getFavoritos(), appUser.getEquipo(), peleaResponseList);
+        return new UserResponse(appUser.getId(), appUser.getEmail(), appUser.getNombre(), appUser.getFavoritos(), appUser.getEquipo(), peleaResponseList);
     }
 
 }

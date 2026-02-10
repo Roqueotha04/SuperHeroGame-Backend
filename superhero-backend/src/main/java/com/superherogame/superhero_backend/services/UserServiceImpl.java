@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
         if (appUser.getEmail().equals(email))throw new IllegalArgumentException("new email cannot be the same as actual email");
         Optional<AppUser> auxUser= userRepository.findByEmail(email);
         if (auxUser.isPresent() && !auxUser.get().getId().equals(appUser.getId()))throw new IllegalStateException("Email already in use");
+        appUser.setEmail(email);
         return userMapper.toResponse(userRepository.save(appUser));
     }
 
