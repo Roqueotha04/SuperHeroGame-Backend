@@ -39,6 +39,6 @@ public class AppUser {
     private List<Long> favoritos=new ArrayList<>();
     @ElementCollection
     private List<Long> equipo=new ArrayList<>();
-    @OneToMany
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     private List<Pelea> historial=new ArrayList<>();
 }
