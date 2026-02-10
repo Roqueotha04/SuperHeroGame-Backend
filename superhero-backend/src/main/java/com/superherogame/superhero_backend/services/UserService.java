@@ -1,5 +1,6 @@
 package com.superherogame.superhero_backend.services;
 
+import com.superherogame.superhero_backend.dto.PasswordUpdateRequest;
 import com.superherogame.superhero_backend.dto.UserAuthResponse;
 import com.superherogame.superhero_backend.dto.UserResponse;
 import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
@@ -14,6 +15,7 @@ public interface UserService {
     public AppUser saveUser(AppUser appUser);
     public UserResponse addHeroToFavoritesList(Long userId, Long HeroId);
     public UserResponse RemoveHeroFromFavoriteList(Long userId, Long HeroId);
-    public UserResponse getFavoritesList(Long userId);
+    public UserResponse patchEmail(Long id, String email);
+    public UserResponse patchPassword(Long id, PasswordUpdateRequest passwordUpdateRequest);
     public AppUser getUserOrThrow(Long id);
 }

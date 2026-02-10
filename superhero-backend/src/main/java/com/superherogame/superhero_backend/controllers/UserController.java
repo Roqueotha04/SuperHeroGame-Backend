@@ -1,6 +1,7 @@
 package com.superherogame.superhero_backend.controllers;
 
 import com.superherogame.superhero_backend.configuration.service.CurrentUserService;
+import com.superherogame.superhero_backend.dto.PasswordUpdateRequest;
 import com.superherogame.superhero_backend.dto.UserResponse;
 import com.superherogame.superhero_backend.entities.AppUser;
 import com.superherogame.superhero_backend.repositories.UserRepository;
@@ -37,6 +38,16 @@ public class UserController {
     @PatchMapping("/eliminarFavorito/{idHeroe}")
     public UserResponse removeHeroFromFavoritesList(@PathVariable Long idHeroe){
         return userService.RemoveHeroFromFavoriteList(currentUserService.getId(), idHeroe);
+    }
+
+    @PatchMapping("/updateEmail")
+    public UserResponse patchEmail(@RequestBody String email){
+        return userService.patchEmail(currentUserService.getId(), email);
+    }
+
+    @PatchMapping("updatePassword")
+    public UserResponse patchPassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest){
+        return userService.patchPassword(currentUserService.getId(), passwordUpdateRequest);
     }
 
 
