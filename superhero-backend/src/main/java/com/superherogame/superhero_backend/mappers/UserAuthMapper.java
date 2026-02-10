@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class UserAuthMapper {
 
     public UserAuthResponse toResponse(AppUser appUser, String token){
-        return new UserAuthResponse(appUser.getId(), appUser.getNombre(), appUser.getFavoritos(), appUser.getEquipos(), appUser.getHistorial(), token);
+        return new UserAuthResponse(appUser.getId(), appUser.getNombre(), appUser.getFavoritos(), appUser.getEquipo(), appUser.getHistorial(), token);
     }
     public AppUser toAppUser(UserRegisterDTO userRegisterDTO){
         return new AppUser(userRegisterDTO.nombre(), userRegisterDTO.apellido(), userRegisterDTO.email(), userRegisterDTO.password());

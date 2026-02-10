@@ -16,6 +16,13 @@ import java.time.LocalDateTime;
 @Data
 public class Pelea {
 
+    public Pelea(Long idHeroe1, Long idHeroe2, Long idGanador, LocalDateTime fechaPelea) {
+        this.idHeroe1 = idHeroe1;
+        this.idHeroe2 = idHeroe2;
+        this.idGanador = idGanador;
+        this.fechaPelea = fechaPelea;
+    }
+
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     Long id;
@@ -23,5 +30,5 @@ public class Pelea {
     Long idHeroe1;
     Long idHeroe2;
     Long idGanador;
-    LocalDateTime fecha;
+    LocalDateTime fechaPelea;
 }

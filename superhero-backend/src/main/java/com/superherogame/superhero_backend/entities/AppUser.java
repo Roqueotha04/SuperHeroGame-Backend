@@ -37,8 +37,8 @@ public class AppUser {
 
     @ElementCollection
     private List<Long> favoritos=new ArrayList<>();
-    @OneToMany
-    private List<Equipo> equipos=new ArrayList<>();
+    @ElementCollection
+    private List<Long> equipo=new ArrayList<>();
     @OneToMany
     private List<Pelea> historial=new ArrayList<>();
 }
