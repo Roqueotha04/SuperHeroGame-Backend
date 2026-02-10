@@ -1,0 +1,5 @@
+# Created at 2026-02-07T16:16:45.549
+Boot Manifest-JAR contains absolute paths in classpath 'D:\01_Programacion\superhero-backend\superhero-backend\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
