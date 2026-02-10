@@ -8,19 +8,21 @@ import com.superherogame.superhero_backend.mappers.PeleaMapper;
 import com.superherogame.superhero_backend.repositories.PeleaRepository;
 import com.superherogame.superhero_backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class PeleaServiceImpl implements PeleaService{
 
     private final PeleaRepository peleaRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final PeleaMapper peleaMapper;
 
-    public PeleaServiceImpl(PeleaRepository peleaRepository, UserRepository userRepository, PeleaMapper peleaMapper) {
+    public PeleaServiceImpl(PeleaRepository peleaRepository, UserService userService, PeleaMapper peleaMapper) {
         this.peleaRepository = peleaRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.peleaMapper = peleaMapper;
     }
 
@@ -32,9 +34,15 @@ public class PeleaServiceImpl implements PeleaService{
     }
 
     @Override
+    @Transactional
     public PeleaResponse addPeleaToUser(Long id, PeleaRequest peleaRequest) {
-        AppUser userRef= userRepository.getReferenceById(id);
-        Pelea pelea = peleaMapper.toPelea(peleaRequest, userRef);
+        AppUser currentUser= userService.getUserOrThrow(id);
+        Pelea pelea = peleaMapper.toPelea(peleaRequest, currentUser);
+        if (pelea.getIdHeroe1().equals(pelea.getIdGanador())){
+            currentUser.getEquipo().add(pelea.getIdHeroe2());
+        }else{
+            currentUser.getEquipo().remove(pelea.getIdHeroe1());
+        }
         return peleaMapper.toResponse(peleaRepository.save(pelea));
     }
 }
