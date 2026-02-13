@@ -46,7 +46,7 @@ public class UserController {
         return userService.patchEmail(currentUserService.getId(), email.email());
     }
 
-    @PatchMapping("updatePassword")
+    @PatchMapping("/updatePassword")
     public UserResponse patchPassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest){
         return userService.patchPassword(currentUserService.getId(), passwordUpdateRequest);
     }
