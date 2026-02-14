@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface UserService {
     public AppUser findUserByEmail(String email);
+    public List<UserResponse> findAllUsers();
     public UserResponse findUserById(Long id);
     public AppUser saveUser(AppUser appUser);
     public UserResponse addHeroToFavoritesList(Long userId, Long HeroId);

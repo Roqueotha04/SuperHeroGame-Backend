@@ -34,6 +34,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserResponse> findAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
+
+    @Override
     public UserResponse findUserById(Long id) {
         return userMapper.toResponse(getUserOrThrow(id));
     }
