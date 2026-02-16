@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -27,19 +28,23 @@ public class AuthServiceImpl implements AuthService{
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final SuperHeroApiService superHeroApiService;
+    private final UserRepository userRepository;
 
-    public AuthServiceImpl(UserService userService, UserAuthMapper userAuthMapper, JwtUtils jwtUtils, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, SuperHeroApiService superHeroApiService) {
+    public AuthServiceImpl(UserService userService, UserAuthMapper userAuthMapper, JwtUtils jwtUtils, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, SuperHeroApiService superHeroApiService, UserRepository userRepository) {
         this.userService = userService;
         this.userAuthMapper = userAuthMapper;
         this.jwtUtils = jwtUtils;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.superHeroApiService = superHeroApiService;
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserAuthResponse register(UserRegisterDTO userRegisterDTO) {
         AppUser appUser=userAuthMapper.toAppUser(userRegisterDTO);
+        Optional<AppUser> auxUser= userRepository.findByEmail(appUser.getEmail());
+        if (auxUser.isPresent() && !auxUser.get().getId().equals(appUser.getId()))throw new IllegalStateException("El email ya esta en uso");
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
         appUser.setEquipo(addHeroesToUser());
         appUser = userService.saveUser(appUser);

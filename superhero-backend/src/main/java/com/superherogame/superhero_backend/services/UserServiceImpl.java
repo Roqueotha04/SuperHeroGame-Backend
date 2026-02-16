@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AppUser findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFound("Could not found user with email: " + email));
+        return userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFound("Usuario no encontrado con email: " + email));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse addHeroToFavoritesList(Long userId, Long HeroId) {
         AppUser appUser = getUserOrThrow(userId);
-        if (appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("Duplicated hero");
+        if (appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("Heroe duplicado");
 
         appUser.getFavoritos().add(HeroId);
         return userMapper.toResponse(userRepository.save(appUser));
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse RemoveHeroFromFavoriteList(Long userId, Long HeroId) {
         AppUser appUser = getUserOrThrow(userId);
-        if (!appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("The hero is not in Favorites List");
+        if (!appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("El heroe no esta en la lista de favoritos");
         appUser.getFavoritos().remove(HeroId);
         return userMapper.toResponse(userRepository.save(appUser));
     }
@@ -71,9 +71,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse patchEmail(Long id, String email) {
         AppUser appUser = getUserOrThrow(id);
-        if (appUser.getEmail().equals(email))throw new IllegalArgumentException("new email cannot be the same as actual email");
+        if (appUser.getEmail().equals(email))throw new IllegalArgumentException("El nuevo email no puede ser igual al anterior");
         Optional<AppUser> auxUser= userRepository.findByEmail(email);
-        if (auxUser.isPresent() && !auxUser.get().getId().equals(appUser.getId()))throw new IllegalStateException("Email already in use");
+        if (auxUser.isPresent() && !auxUser.get().getId().equals(appUser.getId()))throw new IllegalStateException("El email ya esta en uso");
         appUser.setEmail(email);
         return userMapper.toResponse(userRepository.save(appUser));
     }
@@ -82,15 +82,15 @@ public class UserServiceImpl implements UserService {
     public UserResponse patchPassword(Long id, PasswordUpdateRequest passwordUpdateRequest) {
         AppUser appUser = getUserOrThrow(id);
         if (passwordUpdateRequest.actualPassword().equals(passwordUpdateRequest.newPassword()))
-            throw  new IllegalArgumentException("New password cannot be the same as current password");
-        if (!passwordEncoder.matches(passwordUpdateRequest.actualPassword(), appUser.getPassword())) throw new BadCredentialsException("Current password is incorrect");
+            throw  new IllegalArgumentException("La nueva contraseña no puede ser igual a la anterior");
+        if (!passwordEncoder.matches(passwordUpdateRequest.actualPassword(), appUser.getPassword())) throw new BadCredentialsException("La contraseña actual es incorrecta");
         appUser.setPassword(passwordEncoder.encode(passwordUpdateRequest.newPassword()));
         return userMapper.toResponse(userRepository.save(appUser));
     }
 
     @Override
     public AppUser getUserOrThrow(Long id) {
-        return userRepository.findById(id).orElseThrow(()->new ResourceNotFound("Could not found User with id: " + id));
+        return userRepository.findById(id).orElseThrow(()->new ResourceNotFound("Usuario no encontrado con id: " + id));
     }
 
 
