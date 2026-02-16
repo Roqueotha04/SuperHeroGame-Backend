@@ -15,11 +15,11 @@ public class AppUser {
         this.apellido = apellido;
         this.email = email;
         this.password = password;
-        this.confirmed=true;
+        this.confirmed=false;
     }
 
     public AppUser() {
-        this.confirmed=true;
+        this.confirmed=false;
     }
 
     @Id
