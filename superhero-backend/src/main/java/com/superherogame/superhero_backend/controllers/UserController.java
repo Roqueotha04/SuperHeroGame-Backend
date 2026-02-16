@@ -1,17 +1,11 @@
 package com.superherogame.superhero_backend.controllers;
 
 import com.superherogame.superhero_backend.configuration.service.CurrentUserService;
-import com.superherogame.superhero_backend.dto.EmailUpdateRequest;
+import com.superherogame.superhero_backend.dto.EmailRequest;
 import com.superherogame.superhero_backend.dto.PasswordUpdateRequest;
 import com.superherogame.superhero_backend.dto.UserResponse;
-import com.superherogame.superhero_backend.entities.AppUser;
-import com.superherogame.superhero_backend.repositories.UserRepository;
 import com.superherogame.superhero_backend.services.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -42,7 +36,7 @@ public class UserController {
     }
 
     @PatchMapping("/updateEmail")
-    public UserResponse patchEmail(@RequestBody EmailUpdateRequest email){
+    public UserResponse patchEmail(@RequestBody EmailRequest email){
         return userService.patchEmail(currentUserService.getId(), email.email());
     }
 

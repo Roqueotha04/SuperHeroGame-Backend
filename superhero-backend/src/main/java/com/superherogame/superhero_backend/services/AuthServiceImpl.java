@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     public void resendConfirmationEmail(String email) {
-        AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException("Usuario no encontrado"));
+        AppUser user = userService.findUserByEmail(email);
 
         if (user.isConfirmed()) {
             throw new IllegalStateException("Usuario ya confirmado");

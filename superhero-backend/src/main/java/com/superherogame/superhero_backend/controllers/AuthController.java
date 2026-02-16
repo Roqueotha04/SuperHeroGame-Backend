@@ -1,5 +1,6 @@
 package com.superherogame.superhero_backend.controllers;
 
+import com.superherogame.superhero_backend.dto.EmailRequest;
 import com.superherogame.superhero_backend.dto.UserAuthResponse;
 import com.superherogame.superhero_backend.dto.auth.UserLoginDTO;
 import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
@@ -7,6 +8,7 @@ import com.superherogame.superhero_backend.services.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -38,7 +40,10 @@ public class AuthController {
     }
 
     @PostMapping("/requestConfirmationEmail")
-    public ResponseEntity<Void> resendConfirmationEmail(@RequestBody String email){
-        authService.resendConfirmationEmail(email);
+    public ResponseEntity<Map<String, String>> resendConfirmationEmail(@RequestBody EmailRequest email){
+        authService.resendConfirmationEmail(email.email());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Mail de confirmación reenviado correctamente");
+        return ResponseEntity.ok(response);
     }
 }

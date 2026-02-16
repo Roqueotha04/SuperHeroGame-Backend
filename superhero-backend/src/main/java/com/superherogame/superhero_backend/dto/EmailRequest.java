@@ -1,4 +1,4 @@
 package com.superherogame.superhero_backend.dto;
 
-public record EmailUpdateRequest (String email) {
+public record EmailRequest(String email) {
 }
