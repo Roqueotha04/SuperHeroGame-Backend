@@ -12,6 +12,7 @@ public class EmailServiceImpl implements EmailService{
 
     @Value("${email.sender}")
     private String emailSender;
+
     private final JavaMailSenderImpl mailSender;
 
     public EmailServiceImpl(JavaMailSenderImpl mailSender) {

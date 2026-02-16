@@ -14,10 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService{
@@ -29,8 +26,9 @@ public class AuthServiceImpl implements AuthService{
     private final AuthenticationManager authenticationManager;
     private final SuperHeroApiService superHeroApiService;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
-    public AuthServiceImpl(UserService userService, UserAuthMapper userAuthMapper, JwtUtils jwtUtils, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, SuperHeroApiService superHeroApiService, UserRepository userRepository) {
+    public AuthServiceImpl(UserService userService, UserAuthMapper userAuthMapper, JwtUtils jwtUtils, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, SuperHeroApiService superHeroApiService, UserRepository userRepository, EmailService emailService) {
         this.userService = userService;
         this.userAuthMapper = userAuthMapper;
         this.jwtUtils = jwtUtils;
@@ -38,6 +36,7 @@ public class AuthServiceImpl implements AuthService{
         this.authenticationManager = authenticationManager;
         this.superHeroApiService = superHeroApiService;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -50,8 +49,47 @@ public class AuthServiceImpl implements AuthService{
         appUser = userService.saveUser(appUser);
 
         String token = jwtUtils.generateToken(appUser);
+
+
+        sendConfirmationEmail(appUser);
         return userAuthMapper.toResponse(appUser, token);
     }
+
+    private void sendConfirmationEmail(AppUser user) {
+
+        String confirmationToken = UUID.randomUUID().toString();
+
+        String link = "http://localhost:4200/confirmemail/" + confirmationToken;
+
+        String message = buildConfirmationEmail(link);
+
+        emailService.sendEmail(
+                user.getEmail(),
+                "SuperHeroGame - Email confirmation",
+                message
+        );
+    }
+
+    private String buildConfirmationEmail(String link) {
+        return """
+        <html>
+            <body style="font-family: Arial, sans-serif;">
+                <h2>Welcome to SuperHeroGame!</h2>
+                <p>Please confirm your email by clicking the button below:</p>
+                <a href="%s"
+                   style="background-color:#1976d2;
+                          color:white;
+                          padding:10px 20px;
+                          text-decoration:none;
+                          border-radius:5px;">
+                   Confirm Email
+                </a>
+                <p>This link will expire soon.</p>
+            </body>
+        </html>
+    """.formatted(link);
+    }
+
 
     @Override
     public List<Long> addHeroesToUser() {

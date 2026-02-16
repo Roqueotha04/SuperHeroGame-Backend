@@ -14,6 +14,9 @@ public class MailConfiguration {
     @Value("${email.sender}")
     private String emailSender;
 
+    @Value("${email.pass}")
+    private String emailPassword;
+
     @Bean
     public JavaMailSender getJavaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
