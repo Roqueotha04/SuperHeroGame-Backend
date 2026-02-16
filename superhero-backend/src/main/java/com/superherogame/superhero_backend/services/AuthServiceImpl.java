@@ -12,6 +12,7 @@ import com.superherogame.superhero_backend.repositories.UserRepository;
 import lombok.Lombok;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,15 @@ public class AuthServiceImpl implements AuthService{
         String token = jwtUtils.generatePasswordResetToken(user);
         String link = "http://localhost:4200/resetpassword/" + token;
         emailService.sendForgetPasswordEmail(user.getEmail(), link);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(String password, String confirmPassword, String token) {
+        if (!password.equals(confirmPassword)) throw new BadCredentialsException("Las contraseñas no coinciden");
+        DecodedJWT decodedJWT = jwtUtils.verifyToken(token);
+        Long id = Long.parseLong(jwtUtils.extractSubject(decodedJWT));
+        userService.resetPassword(id, password);
     }
 
     @Transactional

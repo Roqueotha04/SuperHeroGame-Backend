@@ -18,6 +18,7 @@ public interface UserService {
     public UserResponse RemoveHeroFromFavoriteList(Long userId, Long HeroId);
     public UserResponse patchEmail(Long id, String email);
     public UserResponse patchPassword(Long id, PasswordUpdateRequest passwordUpdateRequest);
+    public void resetPassword(Long id, String password);
     public void patchConfirmed(Long id, Boolean confirmed);
     public AppUser getUserOrThrow(Long id);
 }

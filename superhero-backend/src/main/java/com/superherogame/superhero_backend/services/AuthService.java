@@ -11,6 +11,7 @@ public interface AuthService {
     public void confirmUser(String token);
     public void resendConfirmationEmail(String email);
     public void sendForgetPasswordEmail(String email);
+    public void resetPassword(String password, String confirmPassword, String token);
     public List<Long> addHeroesToUser();
     public UserAuthResponse login (UserLoginDTO userLoginDTO);
 }

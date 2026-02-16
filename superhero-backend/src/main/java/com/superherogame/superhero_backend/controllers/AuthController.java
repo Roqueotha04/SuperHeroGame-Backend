@@ -1,6 +1,8 @@
 package com.superherogame.superhero_backend.controllers;
 
 import com.superherogame.superhero_backend.dto.EmailRequest;
+import com.superherogame.superhero_backend.dto.PasswordUpdateRequest;
+import com.superherogame.superhero_backend.dto.ResetPasswordDTO;
 import com.superherogame.superhero_backend.dto.UserAuthResponse;
 import com.superherogame.superhero_backend.dto.auth.UserLoginDTO;
 import com.superherogame.superhero_backend.dto.auth.UserRegisterDTO;
@@ -34,9 +36,11 @@ public class AuthController {
     }
 
     @GetMapping("/confirmEmail/{token}")
-    public ResponseEntity<Void> confirmEmail(@PathVariable String token){
+    public ResponseEntity<Map<String, String>> confirmEmail(@PathVariable String token){
         authService.confirmUser(token);
-        return ResponseEntity.ok().build();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Mail modificado con exito");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/requestConfirmationEmail")
@@ -48,10 +52,18 @@ public class AuthController {
     }
 
     @PostMapping ("/recoverPassword")
-    ResponseEntity<Map<String, String>> sendForgetPasswordEmail(@RequestBody EmailRequest email){
+    public ResponseEntity<Map<String, String>> sendForgetPasswordEmail(@RequestBody EmailRequest email){
         authService.sendForgetPasswordEmail(email.email());
         Map<String, String> response = new HashMap<>();
         response.put("message", "Mail enviado correctamente");
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping ("/resetPassword/{token}")
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO, @PathVariable String token){
+        authService.resetPassword(resetPasswordDTO.newPassword(), resetPasswordDTO.confirmPassword(), token);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Contraseña modificada con exito");
         return ResponseEntity.ok(response);
     }
 }

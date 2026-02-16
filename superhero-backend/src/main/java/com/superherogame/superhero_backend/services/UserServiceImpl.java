@@ -12,11 +12,13 @@ import com.superherogame.superhero_backend.repositories.UserRepository;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional (readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -47,11 +49,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public AppUser saveUser(AppUser appUser) {
         return userRepository.save(appUser);
     }
 
     @Override
+    @Transactional
     public UserResponse addHeroToFavoritesList(Long userId, Long HeroId) {
         AppUser appUser = getUserOrThrow(userId);
         if (appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("Heroe duplicado");
@@ -61,6 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse RemoveHeroFromFavoriteList(Long userId, Long HeroId) {
         AppUser appUser = getUserOrThrow(userId);
         if (!appUser.getFavoritos().contains(HeroId)) throw new IllegalStateException("El heroe no esta en la lista de favoritos");
@@ -69,6 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse patchEmail(Long id, String email) {
         AppUser appUser = getUserOrThrow(id);
         if (appUser.getEmail().equals(email))throw new IllegalArgumentException("El nuevo email no puede ser igual al anterior");
@@ -79,6 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse patchPassword(Long id, PasswordUpdateRequest passwordUpdateRequest) {
         AppUser appUser = getUserOrThrow(id);
         if (passwordUpdateRequest.actualPassword().equals(passwordUpdateRequest.newPassword()))
@@ -89,6 +96,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void resetPassword(Long id, String password) {
+        AppUser user = getUserOrThrow(id);
+        System.out.println("Antes: " + user.getPassword());
+        user.setPassword(passwordEncoder.encode(password));
+        System.out.println("Después: " + user.getPassword());
+        userRepository.save(user);
+        //userRepository.flush();
+    }
+
+    @Override
+    @Transactional
     public void patchConfirmed(Long id, Boolean confirmed) {
         AppUser appUser = getUserOrThrow(id);
         if (appUser.isConfirmed()) throw new IllegalStateException("El usuario ya está confirmado");
