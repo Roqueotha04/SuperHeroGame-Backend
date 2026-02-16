@@ -30,4 +30,10 @@ public class AuthController {
     public ResponseEntity<UserAuthResponse> signIn(@RequestBody UserLoginDTO userLoginDTO){
         return ResponseEntity.ok(authService.login(userLoginDTO));
     }
+
+    @GetMapping("/confirmEmail/{token}")
+    public ResponseEntity<Void> confirmEmail(@PathVariable String token){
+        authService.confirmUser(token);
+        return ResponseEntity.ok().build();
+    }
 }

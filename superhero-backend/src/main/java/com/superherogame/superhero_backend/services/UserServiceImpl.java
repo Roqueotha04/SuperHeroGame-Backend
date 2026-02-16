@@ -89,6 +89,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void patchConfirmed(Long id, Boolean confirmed) {
+        AppUser appUser = getUserOrThrow(id);
+        if (appUser.isConfirmed()) throw new IllegalStateException("El usuario ya está confirmado");
+        appUser.setConfirmed(true);
+        userRepository.save(appUser);
+    }
+
+    @Override
     public AppUser getUserOrThrow(Long id) {
         return userRepository.findById(id).orElseThrow(()->new ResourceNotFound("Usuario no encontrado con id: " + id));
     }

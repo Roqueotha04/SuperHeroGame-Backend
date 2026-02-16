@@ -1,5 +1,6 @@
 package com.superherogame.superhero_backend.services;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.superherogame.superhero_backend.Utils.JwtUtils;
 import com.superherogame.superhero_backend.dto.UserAuthResponse;
 import com.superherogame.superhero_backend.dto.UserResponse;
@@ -66,6 +67,17 @@ public class AuthServiceImpl implements AuthService{
         String link = "http://localhost:4200/confirmemail/" + confirmationToken;
 
         emailService.sendConfirmationEmail(user.getEmail(), link);
+    }
+
+    @Transactional
+    public void confirmUser(String token){
+       DecodedJWT decodedJWT = jwtUtils.verifyToken(token);
+       String type = jwtUtils.extractClaim(decodedJWT, "type");
+       if (!"email_confirmation".equals(type)) throw new IllegalStateException("Token inválido");
+
+       Long id = Long.parseLong(jwtUtils.extractSubject(decodedJWT));
+       userService.patchConfirmed(id, true);
+
     }
 
     @Override

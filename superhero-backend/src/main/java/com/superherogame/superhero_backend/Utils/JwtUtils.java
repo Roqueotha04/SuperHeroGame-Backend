@@ -80,4 +80,8 @@ public class JwtUtils {
     public String extractSubject(DecodedJWT decodedJWT){
         return decodedJWT.getSubject();
     }
+
+    public String extractClaim(DecodedJWT decodedJWT, String claimName) {
+        return decodedJWT.getClaim(claimName).asString();
+    }
 }
