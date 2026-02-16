@@ -43,7 +43,15 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> resendConfirmationEmail(@RequestBody EmailRequest email){
         authService.resendConfirmationEmail(email.email());
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Mail de confirmación reenviado correctamente");
+        response.put("message", "Mail enviado correctamente");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping ("/recoverPassword")
+    ResponseEntity<Map<String, String>> sendForgetPasswordEmail(@RequestBody EmailRequest email){
+        authService.sendForgetPasswordEmail(email.email());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Mail enviado correctamente");
         return ResponseEntity.ok(response);
     }
 }

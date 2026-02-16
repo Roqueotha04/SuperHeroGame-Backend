@@ -58,6 +58,21 @@ public class JwtUtils {
                 .sign(algorithm);
     }
 
+    public String generatePasswordResetToken(AppUser user) {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        return buildPasswordResetToken(user, algorithm);
+    }
+
+    public String buildPasswordResetToken(AppUser user, Algorithm algorithm) {
+        return JWT.create()
+                .withIssuer(userGenerator)
+                .withSubject(user.getId().toString())
+                .withClaim("type", "password_reset")
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .sign(algorithm);
+    }
+
     public DecodedJWT verifyToken(String token){
         try{
         Algorithm algorithm = Algorithm.HMAC256(secretKey);

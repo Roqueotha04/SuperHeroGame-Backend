@@ -120,5 +120,86 @@ public class EmailServiceImpl implements EmailService{
     """.formatted(link);
     }
 
+    @Override
+    @Async
+    public void sendForgetPasswordEmail(String toUser, String link){
+        String message = buildPasswordResetEmail(link);
+        sendEmail(toUser, "SuperheroGame - Forget Password", message);
+    }
+
+    private String buildPasswordResetEmail(String link) {
+        return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Restablecer Contraseña</title>
+    </head>
+    <body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f4f6f8;">
+
+        <div style="display:none; max-height:0px; overflow:hidden;">
+            Restablecé tu contraseña en SuperHeroGame 🦸‍♂️
+        </div>
+
+        <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:20px 0;">
+            <tr>
+                <td align="center">
+
+                    <table width="600" cellpadding="0" cellspacing="0" 
+                           style="background-color:#ffffff; padding:20px; border-radius:8px;">
+
+                        <tr>
+                            <td align="center" style="color:#1976d2; font-size:22px; font-weight:bold; padding-bottom:10px;">
+                                Restablecé tu contraseña
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="color:#333333; font-size:16px; padding-bottom:15px;">
+                                Recibimos una solicitud para restablecer tu contraseña de <strong>SuperHeroGame</strong>.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align="center" style="padding-bottom:20px;">
+                                <a href="%s"
+                                   style="background-color:#1976d2;
+                                          color:#ffffff;
+                                          padding:12px 24px;
+                                          text-decoration:none;
+                                          border-radius:6px;
+                                          font-size:16px;
+                                          font-weight:bold;
+                                          display:inline-block;">
+                                   Restablecer contraseña
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="color:#777777; font-size:13px; padding-bottom:20px;">
+                                Si no solicitaste este cambio, simplemente ignora este mensaje.<br>
+                                El enlace expirará en 30 minutos.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align="center" style="color:#999999; font-size:12px; padding-top:10px; border-top:1px solid #eeeeee;">
+                                © SuperHeroGame — All Rights Reserved
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+
+    </body>
+    </html>
+    """.formatted(link);
+    }
+
+
 
 }

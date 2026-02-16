@@ -81,6 +81,14 @@ public class AuthServiceImpl implements AuthService{
         emailService.sendConfirmationEmail(user.getEmail(), link);
     }
 
+    @Override
+    public void sendForgetPasswordEmail(String email) {
+        AppUser user = userService.findUserByEmail(email);
+        String token = jwtUtils.generatePasswordResetToken(user);
+        String link = "http://localhost:4200/resetpassword/" + token;
+        emailService.sendForgetPasswordEmail(user.getEmail(), link);
+    }
+
     @Transactional
     public void confirmUser(String token){
        DecodedJWT decodedJWT = jwtUtils.verifyToken(token);
