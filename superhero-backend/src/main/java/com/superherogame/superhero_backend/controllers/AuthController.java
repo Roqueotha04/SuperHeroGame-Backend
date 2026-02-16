@@ -36,4 +36,9 @@ public class AuthController {
         authService.confirmUser(token);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/requestConfirmationEmail")
+    public ResponseEntity<Void> resendConfirmationEmail(@RequestBody String email){
+        authService.resendConfirmationEmail(email);
+    }
 }

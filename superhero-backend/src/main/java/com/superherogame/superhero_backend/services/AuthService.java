@@ -9,6 +9,7 @@ import java.util.List;
 public interface AuthService {
     public UserAuthResponse register(UserRegisterDTO userRegisterDTO);
     public void confirmUser(String token);
+    public void resendConfirmationEmail(String email);
     public List<Long> addHeroesToUser();
     public UserAuthResponse login (UserLoginDTO userLoginDTO);
 }

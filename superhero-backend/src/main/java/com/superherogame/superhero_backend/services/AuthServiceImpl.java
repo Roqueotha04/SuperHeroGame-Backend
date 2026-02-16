@@ -69,6 +69,18 @@ public class AuthServiceImpl implements AuthService{
         emailService.sendConfirmationEmail(user.getEmail(), link);
     }
 
+    public void resendConfirmationEmail(String email) {
+        AppUser user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException("Usuario no encontrado"));
+
+        if (user.isConfirmed()) {
+            throw new IllegalStateException("Usuario ya confirmado");
+        }
+
+        String token = jwtUtils.generateEmailConfirmationToken(user);
+        String link = "http://localhost:4200/confirmemail/" + token;
+        emailService.sendConfirmationEmail(user.getEmail(), link);
+    }
+
     @Transactional
     public void confirmUser(String token){
        DecodedJWT decodedJWT = jwtUtils.verifyToken(token);
