@@ -43,6 +43,21 @@ public class JwtUtils {
                 .sign(algorithm);
     }
 
+    public String generateEmailConfirmationToken(AppUser user){
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        return buildEmailConfirmationToken(user, algorithm);
+    }
+
+    public String buildEmailConfirmationToken(AppUser user, Algorithm algorithm){
+        return JWT.create()
+                .withIssuer(userGenerator)
+                .withSubject(user.getId().toString())
+                .withClaim("type", "email_confirmation")
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .sign(algorithm);
+    }
+
     public DecodedJWT verifyToken(String token){
         try{
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
