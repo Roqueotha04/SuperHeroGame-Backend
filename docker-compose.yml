@@ -1,27 +1,33 @@
 services:
   spring-api-image:
-    image: spring-api-image
+    image: superherogame-image
     container_name: spring-api-container
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     networks:
       - spring-network
     depends_on:
-      - mysql
+      - postgres
+    env_file:
+      - .env
 
-  mysql:
-    image: mysql
-    container_name: mysql_database
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres_container
     environment:
-      MYSQL_ROOT_PASSWORD: bddroque
-      MYSQL_DATABASE: superherodb
+      POSTGRES_PASSWORD: ${POSTGRESPASSWORD}
+      POSTGRES_DB: ${POSTGRESDATABASE}
+      POSTGRES_USER: ${POSTGRESUSERNAME}
     ports:
-      - "3307:3306"
+      - "5433:5432"
     networks:
       - spring-network
     volumes:
-      - mysql-data:/var/lib/mysql
+      - pg-data:/var/lib/postgresql/data
 networks:
   spring-network:
 volumes:
-  mysql-data:
+  pg-data:
