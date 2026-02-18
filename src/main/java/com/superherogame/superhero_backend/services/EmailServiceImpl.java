@@ -23,6 +23,7 @@ public class EmailServiceImpl implements EmailService {
     private String emailSender;
 
     private final RestTemplate restTemplate = new RestTemplate();
+
     private final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
 
     @Override

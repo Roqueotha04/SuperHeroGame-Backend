@@ -65,7 +65,7 @@ public class AuthServiceImpl implements AuthService{
 
         String confirmationToken = jwtUtils.generateEmailConfirmationToken(user);
 
-        String link = "http://localhost:4200/confirmemail/" + confirmationToken;
+        String link = "https://superherogame-xi.vercel.app/confirmemail/" + confirmationToken;
 
         emailService.sendConfirmationEmail(user.getEmail(), link);
     }
@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService{
         }
 
         String token = jwtUtils.generateEmailConfirmationToken(user);
-        String link = "http://localhost:4200/confirmemail/" + token;
+        String link = "https://superherogame-xi.vercel.app/confirmemail/" + token;
         emailService.sendConfirmationEmail(user.getEmail(), link);
     }
 
@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService{
     public void sendForgetPasswordEmail(String email) {
         AppUser user = userService.findUserByEmail(email);
         String token = jwtUtils.generatePasswordResetToken(user);
-        String link = "http://localhost:4200/resetpassword/" + token;
+        String link = "https://superherogame-xi.vercel.app/resetpassword/" + token;
         emailService.sendForgetPasswordEmail(user.getEmail(), link);
     }
 
