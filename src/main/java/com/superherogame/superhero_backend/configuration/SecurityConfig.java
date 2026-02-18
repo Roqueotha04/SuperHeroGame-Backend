@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( req -> req.
                         requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/status").permitAll()
+                        .requestMatchers("/api/warmup").permitAll()
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
