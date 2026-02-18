@@ -44,9 +44,9 @@ public class SecurityConfig {
                         requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/status").permitAll()
                         .requestMatchers("/api/warmup").permitAll()
+                        .requestMatchers("/email").permitAll()
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

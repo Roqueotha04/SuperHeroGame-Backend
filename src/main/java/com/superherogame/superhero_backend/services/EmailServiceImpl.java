@@ -1,49 +1,66 @@
 package com.superherogame.superhero_backend.services;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
+
+    @Value("${BREVOTOKEN}")
+    private String apiKey;
 
     @Value("${email.sender}")
     private String emailSender;
 
-    private final JavaMailSender mailSender;
-
-    public EmailServiceImpl(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
 
     @Override
     @Async
-    public void sendEmail(String toUser, String subject, String message) {
+    public void sendEmail(String toUser, String subject, String htmlContent) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
+
+        // Estructura según la API de Brevo
+        Map<String, Object> body = new HashMap<>();
+        body.put("sender", Map.of("name", "SuperHero Game", "email", emailSender));
+        body.put("to", List.of(Map.of("email", toUser)));
+        body.put("subject", subject);
+        body.put("htmlContent", htmlContent);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            mimeMessageHelper.setFrom(emailSender);
-            mimeMessageHelper.setTo(toUser);
-            mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(message, true);
-
-            mailSender.send(mimeMessage);
-
-        } catch (MessagingException e) {
-            System.out.println(e.getMessage());
+            restTemplate.postForEntity(BREVO_URL, entity, String.class);
+            logger.info("📧 Email enviado con éxito a: {}", toUser);
+        } catch (Exception e) {
+            logger.error("❌ Error al enviar email a {}: {}", toUser, e.getMessage());
         }
     }
 
     @Override
     @Async
-    public void sendConfirmationEmail(String toUser, String link){
+    public void sendConfirmationEmail(String toUser, String link) {
         String message = buildConfirmationEmail(link);
         sendEmail(toUser, "SuperheroGame - Confirmation Email", message);
+    }
+
+    @Override
+    @Async
+    public void sendForgetPasswordEmail(String toUser, String link) {
+        String message = buildPasswordResetEmail(link);
+        sendEmail(toUser, "SuperheroGame - Forget Password", message);
     }
 
     private String buildConfirmationEmail(String link) {
@@ -120,13 +137,6 @@ public class EmailServiceImpl implements EmailService{
     """.formatted(link);
     }
 
-    @Override
-    @Async
-    public void sendForgetPasswordEmail(String toUser, String link){
-        String message = buildPasswordResetEmail(link);
-        sendEmail(toUser, "SuperheroGame - Forget Password", message);
-    }
-
     private String buildPasswordResetEmail(String link) {
         return """
     <!DOCTYPE html>
@@ -199,7 +209,5 @@ public class EmailServiceImpl implements EmailService{
     </html>
     """.formatted(link);
     }
-
-
 
 }
