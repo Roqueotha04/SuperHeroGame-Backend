@@ -1,22 +1,21 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk-alpine AS build
 
-EXPOSE 8080
-#Define root directory
 WORKDIR /root
 
-#Copy files
 COPY ./pom.xml /root
 COPY ./.mvn /root/.mvn
 COPY ./mvnw /root
-
 RUN chmod +x ./mvnw
-#Download dependencies
+
 RUN ./mvnw dependency:go-offline
 
-#Copy SRC
 COPY ./src /root/src
-
-#BUILD APP
 RUN ./mvnw clean install -DskipTests
 
-ENTRYPOINT ["java","-jar","/root/target/superhero-backend-0.0.1-SNAPSHOT.jar"]
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+
+COPY --from=build /root/target/superhero-backend-0.0.1-SNAPSHOT.jar /app/app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/app/app.jar"]
