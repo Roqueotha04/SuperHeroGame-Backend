@@ -30,6 +30,22 @@ https://superherogame-backend.onrender.com
 Hosted on Neon Tech
 
 ---
+## 🚀 Performance Optimization (Anti-Cold Start Strategy)
+
+Since this project is hosted on free tiers (**Render** for the Backend and **Neon** for PostgreSQL), the system would naturally face "Cold Starts" (latency up to 50s after inactivity). I have implemented a three-layered solution to ensure an immediate, professional user experience:
+
+### 1. Database Warm-up Strategy
+* **The Challenge:** Neon DB enters a sleep state after 5 minutes of inactivity to save resources.
+* **The Solution:** The Frontend (`Angular`) triggers a silent "warm-up" request to the backend via `ngOnInit` as soon as the landing page loads.
+* **The Result:** While the user spends time on the welcome screen, the DB connection is restored in the background. By the time they click Login or Register, the response is near-instant (< 2s).
+
+### 2. High Availability Monitoring (Keep-Alive)
+* **The Solution:** Integrated **UptimeRobot** to perform constant health-check pings to the Spring Boot Actuator endpoint.
+* **The Result:** This prevents the Render instance from spinning down, keeping the application context loaded in memory and ready to serve requests.
+
+### 3. Optimized Connection Pooling
+* **The Solution:** Fine-tuned **HikariCP** parameters within Spring Boot to manage short-lived connections.
+* **The Result:** This configuration is specifically tailored for Serverless PostgreSQL environments, preventing memory leaks and ensuring stable performance under the project's group ID: `com.superherogame`.
 
 ## 🛠 Tech Stack
 
