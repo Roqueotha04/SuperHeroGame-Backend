@@ -172,13 +172,13 @@ Frontend → Backend API → Cloud Database
 
 The application uses environment variables for secure production configuration:
 
-EMAIL_PASS
-JWT_SECRET
-POSTGRESDATABASE
-POSTGRESHOST
-POSTGRESPASSWORD
-POSTGRESPORT
-POSTGRESUSERNAME
+- EMAIL_PASS
+- JWT_SECRET
+- POSTGRESDATABASE
+- POSTGRESHOST
+- POSTGRESPASSWORD
+- POSTGRESPORT
+- POSTGRESUSERNAME
 
 Sensitive credentials are never hardcoded.
 
