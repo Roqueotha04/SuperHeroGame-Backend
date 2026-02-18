@@ -8,6 +8,7 @@ public class HealthCheckController {
 
     @GetMapping("/api/status")
     public String checkStatus() {
+        System.out.println("Request received");
         return "ok";
     }
 }
