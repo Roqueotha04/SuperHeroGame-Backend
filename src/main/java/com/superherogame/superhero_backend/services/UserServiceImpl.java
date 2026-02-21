@@ -1,5 +1,6 @@
 package com.superherogame.superhero_backend.services;
 
+import com.superherogame.superhero_backend.Utils.JwtUtils;
 import com.superherogame.superhero_backend.dto.PasswordUpdateRequest;
 import com.superherogame.superhero_backend.dto.UserAuthResponse;
 import com.superherogame.superhero_backend.dto.UserResponse;
@@ -23,11 +24,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final JwtUtils jwtUtils;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, EmailService emailService, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -81,6 +86,8 @@ public class UserServiceImpl implements UserService {
         Optional<AppUser> auxUser= userRepository.findByEmail(email);
         if (auxUser.isPresent() && !auxUser.get().getId().equals(appUser.getId()))throw new IllegalStateException("El email ya esta en uso");
         appUser.setEmail(email);
+        String token = jwtUtils.generateToken(appUser);
+        emailService.sendConfirmationEmail(email, token);
         return userMapper.toResponse(userRepository.save(appUser));
     }
 
