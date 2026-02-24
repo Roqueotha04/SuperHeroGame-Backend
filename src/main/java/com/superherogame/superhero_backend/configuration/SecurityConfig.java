@@ -2,6 +2,7 @@ package com.superherogame.superhero_backend.configuration;
 
 import com.superherogame.superhero_backend.Utils.JwtUtils;
 import com.superherogame.superhero_backend.configuration.filters.JwtTokenValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +30,9 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${FRONTEND_URL}")
+    private String allowedOrigins;
+
     private final JwtUtils jwtUtils;
 
     public SecurityConfig(JwtUtils jwtUtils) {
@@ -54,7 +58,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://superherogame-xi.vercel.app"));
+        config.setAllowedOrigins(List.of(allowedOrigins));
         config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
