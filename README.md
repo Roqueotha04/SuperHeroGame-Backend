@@ -16,7 +16,7 @@ The system handles:
 - 🛡 Password encryption with BCrypt
 - 🏗 Clean layered architecture
 
-This project was built to reflect how modern backend systems are structured, secured, and deployed in real production environments.
+This project was built to reflect how modern backend systems are structured, secured, and deployed in real production environments
 
 ---
 
